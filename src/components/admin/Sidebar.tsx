@@ -5,7 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { 
   LayoutDashboard, Image as ImageIcon, Activity, Calendar, 
-  Users, Building2, MessageSquare, Mail, Instagram, 
+  Users, Building2, MessageSquare, Mail, Camera as Instagram, 
   MapPin, Globe, Settings, BarChart3, LogOut, ChevronRight
 } from "lucide-react";
 
