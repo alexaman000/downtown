@@ -62,9 +62,14 @@ export default function Footer() {
         </div>
 
         <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-500 text-sm">
-            © {new Date().getFullYear()} Downtown Sports Club. All rights reserved.
-          </p>
+          <div className="flex flex-col items-center md:items-start gap-1">
+            <p className="text-gray-500 text-sm">
+              © {new Date().getFullYear()} Downtown Sports Club. All rights reserved.
+            </p>
+            <p className="text-gray-600 text-xs mt-1">
+              Built by WebbyBuilder | Developer Aman Raj | alexaman000r@gmail.com
+            </p>
+          </div>
           <div className="flex gap-6 text-sm text-gray-500">
             <Link href="#" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="#" className="hover:text-white transition-colors">Terms of Service</Link>
