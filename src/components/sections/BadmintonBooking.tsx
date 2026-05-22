@@ -1,8 +1,17 @@
 "use client";
-import { motion } from "framer-motion";
-import { Clock, Users, User, CheckCircle } from "lucide-react";
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Clock, Users, User, CheckCircle, X, Send } from "lucide-react";
 
 export default function BadmintonBooking() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedPlan, setSelectedPlan] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    phone: "",
+    message: ""
+  });
+
   const plans = [
     {
       title: "Hourly Booking",
@@ -29,6 +38,18 @@ export default function BadmintonBooking() {
       popular: false,
     }
   ];
+
+  const handleOpenModal = (planTitle: string) => {
+    setSelectedPlan(planTitle);
+    setIsModalOpen(true);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const text = `Hi DSC! I'm ${formData.name}.%0A*Phone:* ${formData.phone}%0A*Interested In:* Badminton%0A*Plan:* ${selectedPlan}%0A*Message:* ${formData.message}`;
+    window.open(`https://wa.me/916299973147?text=${text}`, "_blank");
+    setIsModalOpen(false);
+  };
 
   return (
     <section id="booking" className="py-24 bg-[#050505] relative">
@@ -93,18 +114,90 @@ export default function BadmintonBooking() {
                 ))}
               </div>
 
-              <a 
-                href="https://wa.me/916299973147?text=Hi%20DSC,%20I'm%20interested%20in%20the%20badminton%20booking."
-                target="_blank"
-                rel="noreferrer"
+              <button 
+                onClick={() => handleOpenModal(plan.title)}
                 className={`block w-full text-center py-4 rounded-xl font-bold transition-all ${plan.popular ? 'bg-[#ffe600] text-black hover:bg-yellow-400' : 'glass bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}
               >
                 Reserve Your Court
-              </a>
+              </button>
             </motion.div>
           ))}
         </div>
       </div>
+
+      {/* Booking Modal */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+          >
+            <motion.div 
+              initial={{ scale: 0.9, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.9, y: 20 }}
+              className="bg-[#121212] border border-white/10 rounded-3xl p-8 max-w-md w-full relative"
+            >
+              <button 
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-6 right-6 text-gray-400 hover:text-white transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              <h3 className="text-2xl font-black text-white mb-2">BOOK <span className="text-[#00f0ff]">BADMINTON</span></h3>
+              <p className="text-gray-400 mb-6 text-sm">You are booking: <strong className="text-white">{selectedPlan}</strong></p>
+
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">Your Name</label>
+                  <input 
+                    type="text" 
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00f0ff] transition-colors"
+                    placeholder="John Doe"
+                    value={formData.name}
+                    onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">Phone Number</label>
+                  <input 
+                    type="tel" 
+                    required
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00f0ff] transition-colors"
+                    placeholder="+91 00000 00000"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-400 mb-1">Message (Optional)</label>
+                  <textarea 
+                    rows={3}
+                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-[#00f0ff] transition-colors"
+                    placeholder="Preferred timing?"
+                    value={formData.message}
+                    onChange={(e) => setFormData({...formData, message: e.target.value})}
+                  ></textarea>
+                </div>
+
+                <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  className="w-full py-4 mt-4 bg-gradient-to-r from-[#00f0ff] to-[#0080ff] text-black font-bold text-lg rounded-xl flex items-center justify-center gap-2 hover:shadow-[0_0_20px_rgba(0,240,255,0.4)] transition-all"
+                >
+                  <span>Confirm & WhatsApp</span>
+                  <Send className="w-5 h-5" />
+                </motion.button>
+              </form>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
